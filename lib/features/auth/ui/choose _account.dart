@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/custom_bouttm/custmo_select_login_button.dart';
+import 'package:graduation_project/core/custom_bouttm/custom_navigator_button.dart';
 import 'package:graduation_project/core/resources/colors_manager.dart';
 import 'package:graduation_project/core/resources/image_assets.dart';
+import 'package:graduation_project/features/auth/ui/login_screen.dart';
+import 'package:graduation_project/features/auth/ui/register_Doctor_screen/register_Doctor_screen.dart';
+import 'package:graduation_project/features/auth/ui/register_patient_screen/register_patient_screen.dart';
 
 class ChooseAccount extends StatefulWidget {
   const ChooseAccount({super.key});
@@ -11,7 +15,8 @@ class ChooseAccount extends StatefulWidget {
 }
 
 class _ChooseAccountState extends State<ChooseAccount> {
-  String selectedRole = ""; // هنخزن هنا الدور اللي المستخدم اختاره
+  String selectedRole = "";
+  String position = "";
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +26,7 @@ class _ChooseAccountState extends State<ChooseAccount> {
     return Scaffold(
       appBar: AppBar(backgroundColor: ColorsManager.white),
       backgroundColor: ColorsManager.white,
+
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: width * 0.0615,
@@ -79,6 +85,52 @@ class _ChooseAccountState extends State<ChooseAccount> {
               },
             ),
           ],
+        ),
+      ),
+
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.0615,
+          vertical: height * 0.05,
+        ),
+        child: CustomNavigatorButton(
+          onPressed: () {
+            if (selectedRole == "Patient") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RegisterPatientScreen(),
+                ),
+              );
+            } else if (selectedRole == "Doctor") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterDoctorScreen()),
+              );
+            } else if (selectedRole == "Nursing") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: ColorsManager.lightGray,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.00615,
+                    vertical: height * 0.009,
+                  ),
+                  elevation: 0.02,
+                  content: const Text(
+                    "  Please select a role first",
+                    style: TextStyle(color: ColorsManager.black),
+                  ),
+                ),
+              );
+            }
+          },
+          color: ColorsManager.purble,
+          text: "Continue",
         ),
       ),
     );
