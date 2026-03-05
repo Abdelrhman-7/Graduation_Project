@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shered/resources/colors_manager.dart';
+import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 
 class CustmoSelectLoginButton extends StatelessWidget {
   const CustmoSelectLoginButton({

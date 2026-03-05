@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation_project/features/auth/widget/custom_drop_down.dart';
-import 'package:graduation_project/features/auth/widget/custom_image_picker.dart';
-import 'package:graduation_project/shered/custom_text_filed/custom_text_field.dart';
-import 'package:graduation_project/shered/resources/colors_manager.dart';
-import 'package:graduation_project/shered/routes_manager.dart';
-import 'package:graduation_project/shered/string/app_string.dart';
-import 'package:graduation_project/shered/custom_bouttm/custom_button.dart';
+import 'package:graduation_project/view/features/auth/widget/custom_drop_down.dart';
+import 'package:graduation_project/view/features/auth/widget/custom_image_picker.dart';
+import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
+import 'package:graduation_project/shered_widgites/custom_text_filed/custom_text_field.dart';
+import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
+import 'package:graduation_project/shered_widgites/routes_manager.dart';
+import 'package:graduation_project/shered_widgites/string/app_string.dart';
 
 enum DoctorRegistrationStep { welcome, form }
 
@@ -73,7 +73,7 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
                 backgroundColor: ColorsManager.purble,
                 text: AppString.alreadyhaveanaccountLogIn,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutesManager.login);
+                  Navigator.pushNamed(context, RoutManager.login);
                 },
               ),
             ],
@@ -144,21 +144,32 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
             ),
             SizedBox(height: 20.h),
             CustomTextField(
-              label: AppString.medicalLicenseNumber,
-              hint: AppString.egLicense,
+              controller:
+                  TextEditingController(), // Placeholder or from state if available
+              labelText: AppString.medicalLicenseNumber,
+              errorText: "Please enter license number",
+              hintText: AppString.egLicense,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             SizedBox(height: 20.h),
             CustomTextField(
-              label: AppString.yearsOfExperience,
-              hint: AppString.zero,
+              controller: TextEditingController(), // Placeholder
+              labelText: AppString.yearsOfExperience,
+              errorText: "Please enter years of experience",
+              hintText: AppString.zero,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(2),
               ],
-              suffixText: AppString.years,
+              suffixIcon: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  AppString.years,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
             ),
             SizedBox(height: 32.h),
             Row(

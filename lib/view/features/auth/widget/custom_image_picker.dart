@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/shered_widgites/string/app_string.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:graduation_project/shered/string/app_string.dart';
 
 class CustomImagePicker extends StatefulWidget {
   final String title;

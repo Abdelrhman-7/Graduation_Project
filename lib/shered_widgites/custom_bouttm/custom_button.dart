@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation_project/shered/resources/colors_manager.dart';
+import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 
 enum CustomButtonStyle { solid, bordered, backButton }
 
@@ -17,6 +17,7 @@ class CustomButton extends StatelessWidget {
   final CustomButtonStyle style;
   final bool useScreenUtil;
   final BorderSide? side;
+  final Widget? icon;
 
   const CustomButton({
     super.key,
@@ -32,6 +33,7 @@ class CustomButton extends StatelessWidget {
     this.style = CustomButtonStyle.solid,
     this.useScreenUtil = false,
     this.side,
+    this.icon,
   });
 
   @override
@@ -67,6 +69,26 @@ class CustomButton extends StatelessWidget {
     final finalRadius = useScaling ? effectiveRadius.r : effectiveRadius;
     final finalFontSize = useScaling ? effectiveFontSize.sp : effectiveFontSize;
 
+    Widget childWidget = Text(
+      text,
+      style: TextStyle(
+        color: effectiveTextColor,
+        fontWeight: fontWeight,
+        fontSize: finalFontSize,
+      ),
+    );
+
+    if (icon != null) {
+      childWidget = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          childWidget,
+          const SizedBox(width: 10),
+          icon!,
+        ],
+      );
+    }
+
     return SizedBox(
       width: finalWidth,
       height: finalHeight,
@@ -80,14 +102,7 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: effectiveTextColor,
-            fontWeight: fontWeight,
-            fontSize: finalFontSize,
-          ),
-        ),
+        child: childWidget,
       ),
     );
   }

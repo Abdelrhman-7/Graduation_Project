@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shered/resources/styles_manager.dart';
+import 'package:graduation_project/shered_widgites/resources/styles_manager.dart';
 
 class PatientFormWidgets {
   static Widget buildChipsSelection(

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation_project/shered/string/app_string.dart';
-import 'package:graduation_project/shered/custom_bouttm/custom_button.dart';
-import 'package:graduation_project/shered/resources/colors_manager.dart';
-import 'package:graduation_project/shered/routes_manager.dart';
-import 'package:graduation_project/shered/custom_bouttm/custom_chip_selection.dart';
-import 'package:graduation_project/shered/custom_bouttm/custom_switch.dart';
-import '../../../shered/custom_text_filed/custom_text_field.dart';
-import '../data/patient_form_data.dart';
+import 'package:graduation_project/models/repository/patient_form_data.dart';
+import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
+import 'package:graduation_project/shered_widgites/custom_bouttm/custom_chip_selection.dart';
+import 'package:graduation_project/shered_widgites/custom_bouttm/custom_switch.dart';
+import 'package:graduation_project/shered_widgites/custom_text_filed/custom_text_field.dart';
+import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
+import 'package:graduation_project/shered_widgites/routes_manager.dart';
+import 'package:graduation_project/shered_widgites/string/app_string.dart';
 
 enum PatientRegistrationStep { welcome, form }
 
@@ -26,6 +26,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
 
   // Form Controllers
   final _dateController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emergencyContactController = TextEditingController();
+
   final List<String> _selectedAllergies = [];
   final List<String> _selectedMedications = [];
   bool _shareDataWithInsurance = true;
@@ -34,10 +38,14 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   void dispose() {
     _pageController.dispose();
     _dateController.dispose();
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _emergencyContactController.dispose();
     super.dispose();
   }
 
   void _nextPage() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_currentSubPage < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -104,7 +112,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                 backgroundColor: ColorsManager.purble,
                 text: AppString.alreadyhaveanaccountLogInPatient,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutesManager.login);
+                  Navigator.pushNamed(context, RoutManager.login);
                 },
               ),
             ],
@@ -176,19 +184,29 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 32),
-          const CustomTextField(label: AppString.fullName, hint: 'John Doe'),
+          CustomTextField(
+            controller: _fullNameController,
+
+            labelText: AppString.fullName,
+            errorText: "Please enter full name",
+            hintText: 'John Doe',
+          ),
           const SizedBox(height: 24),
-          const CustomTextField(
-            label: AppString.phoneNumber,
-            hint: '+1 234 567 890',
+          CustomTextField(
+            controller: _phoneController,
+
+            labelText: AppString.phoneNumber,
+            errorText: "Please enter phone number",
+            hintText: '+1 234 567 890',
             keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 24),
 
           CustomTextField(
-            label: AppString.dateOfBirth,
-            hint: 'yyyy-MM-dd',
             controller: _dateController,
+            labelText: AppString.dateOfBirth,
+            errorText: "Please select date of birth",
+            hintText: 'yyyy-MM-dd',
             isDateField: true,
             initialDate: DateTime(2000),
             firstDate: DateTime(1950),
@@ -266,10 +284,13 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 32),
-          const CustomTextField(
-            label: AppString.emergencyContactNumber,
-            hint: AppString.emergencyContactHint,
-            prefixIcon: Icon(Icons.phone_outlined, color: Colors.grey),
+          CustomTextField(
+            controller: _emergencyContactController,
+
+            labelText: AppString.emergencyContactNumber,
+            errorText: "Please enter emergency contact",
+            hintText: AppString.emergencyContactHint,
+            prefixIcon: const Icon(Icons.phone_outlined, color: Colors.grey),
           ),
           const SizedBox(height: 24),
 
