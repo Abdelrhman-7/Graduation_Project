@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
 import '../manager/patient_requests_cubit.dart';
 import '../widget/patient_request_card.dart';
 

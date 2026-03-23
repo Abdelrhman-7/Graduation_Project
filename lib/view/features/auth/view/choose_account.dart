@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/view/features/auth/view/login_screen.dart';
 import 'package:graduation_project/view/features/auth/view/doctor_registration_screen.dart';
-import 'package:graduation_project/view/features/auth/view/patient_registration_screen.dart';
 import 'package:graduation_project/view/features/auth/widget/custmo_select_login_button.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 import 'package:graduation_project/shered_widgites/resources/image_assets.dart';
 import 'package:graduation_project/shered_widgites/string/app_string.dart';
+import 'package:graduation_project/view/patient/features/auth/view/patient_registration_screen.dart';
 
 class ChooseAccount extends StatefulWidget {
   const ChooseAccount({super.key});
@@ -110,7 +110,9 @@ class _ChooseAccountState extends State<ChooseAccount> {
             } else if (selectedRole == AppString.nursing) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(role: selectedRole),
+                ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

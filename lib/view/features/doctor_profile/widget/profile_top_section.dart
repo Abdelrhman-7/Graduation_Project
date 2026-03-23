@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import 'package:graduation_project/models/model/shered_pref_controller/shered_pref_controler.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
 
 class ProfileTopSection extends StatelessWidget {
   const ProfileTopSection({super.key});
@@ -42,14 +43,23 @@ class ProfileTopSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Dr. Smith',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: ColorsManager.black,
-                    letterSpacing: -0.5,
-                  ),
+                FutureBuilder<String?>(
+                  future: SharedPrefController().getEmail(),
+                  builder: (context, snapshot) {
+                    String name = "Doctor";
+                    if (snapshot.hasData && snapshot.data != null) {
+                      name = snapshot.data!.split('@').first;
+                    }
+                    return Text(
+                      'Dr. $name',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: ColorsManager.black,
+                        letterSpacing: -0.5,
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 2),
                 Container(
@@ -74,23 +84,28 @@ class ProfileTopSection extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: ColorsManager.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.notifications_outlined,
-            color: ColorsManager.black,
-            size: 24,
+        GestureDetector(
+          onTap: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: ColorsManager.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.notifications_outlined,
+              color: ColorsManager.black,
+              size: 24,
+            ),
           ),
         ),
       ],

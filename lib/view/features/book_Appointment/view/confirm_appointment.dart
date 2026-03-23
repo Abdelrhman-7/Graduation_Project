@@ -4,6 +4,7 @@ import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.d
 import 'package:graduation_project/shered_widgites/custom_text/custom_text.dart';
 import '../manager/book_appointment_cubit.dart';
 import '../widget/booking_reusable_widgets.dart';
+import 'booking_successful_screen.dart';
 
 class ConfirmAppointmentScreen extends StatelessWidget {
   const ConfirmAppointmentScreen({super.key});
@@ -173,11 +174,19 @@ class ConfirmAppointmentScreen extends StatelessWidget {
                   height: 56,
                   borderRadius: 16,
                   onPressed: () {
-                    // Action on form submittion
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Appointment Booked Successfully with Dr. ${state.doctor.name}!')),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookingSuccessfulScreen(
+                          doctor: state.doctor,
+                          dateStr: 'Wed, Oct ${state.selectedDateIndex}, 2023',
+                          timeStr: state.selectedTime,
+                          locationStr: state.isVideoCall 
+                             ? 'Online Consultation' 
+                             : 'Heartland Medical Center\nRoom 304, 3rd Floor',
+                        ),
+                      ),
                     );
-                    Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                 ),
                 const SizedBox(height: 32),

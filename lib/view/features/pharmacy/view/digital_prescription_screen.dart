@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/controller/business_logic-layer/pharmacy_cubit.dart';
 import 'package:graduation_project/controller/business_logic-layer/pharmacy_state.dart';
-import 'package:graduation_project/view/features/pharmacy/widget/doctor_info_section.dart';
+import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
+import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
+import 'package:graduation_project/view/features/find_doctor/widget/doctor_details_widgets.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/instructions_list.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/medicine_info_card.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/pharmacy_selection_card.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/prescription_header.dart';
-import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
-import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 
 class DigitalPrescriptionScreen extends StatelessWidget {
   const DigitalPrescriptionScreen({super.key});
@@ -22,8 +22,11 @@ class DigitalPrescriptionScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: ColorsManager.black, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorsManager.black,
+            size: 20,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
@@ -59,24 +62,26 @@ class DigitalPrescriptionScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   _buildSectionTitle('Prescribed by'),
                   const SizedBox(height: 12),
-                  DoctorInfoSection(state: state),
                   const SizedBox(height: 24),
                   _buildSectionTitle('Select Pharmacy'),
                   const SizedBox(height: 12),
-                  ...state.pharmacies.map((p) => PharmacySelectionCard(
-                        pharmacy: p,
-                        isSelected: state.selectedPharmacy.name == p.name,
-                      )),
+                  ...state.pharmacies.map(
+                    (p) => PharmacySelectionCard(
+                      pharmacy: p,
+                      isSelected: state.selectedPharmacy.name == p.name,
+                    ),
+                  ),
                   const SizedBox(height: 30),
                   CustomButton(
                     text: 'Send to ${state.selectedPharmacy.name}',
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                            content: Text(
-                          'Prescription sent to ${state.selectedPharmacy.name}',
-                          style: const TextStyle(color: Colors.white),
-                        )),
+                          content: Text(
+                            'Prescription sent to ${state.selectedPharmacy.name}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                       );
                     },
                     backgroundColor: ColorsManager.purble,

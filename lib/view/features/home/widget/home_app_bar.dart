@@ -7,6 +7,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userRole;
   final bool isOnline;
   final VoidCallback onNotificationTap;
+  final VoidCallback? onProfileTap;
 
   const HomeAppBar({
     super.key,
@@ -14,6 +15,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.userRole,
     required this.isOnline,
     required this.onNotificationTap,
+    this.onProfileTap,
   });
 
   @override
@@ -26,7 +28,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       automaticallyImplyLeading: false,
       titleSpacing: 16,
-      title: Row(
+      title: GestureDetector(
+        onTap: onProfileTap,
+        child: Row(
         children: [
           Stack(
             children: [
@@ -73,6 +77,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
         ],
+      ),
       ),
       actions: [
         Stack(

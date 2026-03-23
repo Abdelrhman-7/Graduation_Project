@@ -5,6 +5,7 @@ import 'package:graduation_project/view/features/find_doctor/widget/doctor_card.
 import 'package:graduation_project/view/features/find_doctor/widget/specialty_filter_chip.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 import 'package:graduation_project/view/features/book_Appointment/view/book_Appointment.dart';
+import 'package:graduation_project/view/features/find_doctor/view/doctor_details_screen.dart';
 
 // Specialty data: label + icon
 const List<Map<String, dynamic>> _specialties = [
@@ -270,8 +271,11 @@ class _FindDoctorScreenState extends State<FindDoctorScreen> {
                 return DoctorCard(
                   doctor: doc,
                   onViewProfile: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('View profile: Dr. ${doc.name}')),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetailsScreen(doctor: doc),
+                      ),
                     );
                   },
                   onBook: () {

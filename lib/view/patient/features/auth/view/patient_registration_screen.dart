@@ -24,7 +24,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   final PageController _pageController = PageController();
   int _currentSubPage = 0;
 
-  // Form Controllers
   final _dateController = TextEditingController();
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -85,14 +84,14 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               Text(
                 AppString.welcomepatient,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: ColorsManager.purble,
                 ),
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 AppString.pleasechooseanoption,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, color: ColorsManager.gray),
@@ -112,7 +111,11 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                 backgroundColor: ColorsManager.purble,
                 text: AppString.alreadyhaveanaccountLogInPatient,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutManager.login);
+                  Navigator.pushNamed(
+                    context,
+                    RoutManager.login,
+                    arguments: AppString.patient,
+                  );
                 },
               ),
             ],
@@ -154,10 +157,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-            child: CircularProgressIndicator(
-              value: _currentSubPage / 2,
+            child: LinearProgressIndicator(
+              value: (_currentSubPage + 1) / 2,
               color: ColorsManager.purble,
-              backgroundColor: ColorsManager.gray,
+              backgroundColor: ColorsManager.gray.withOpacity(0.1),
             ),
           ),
           Expanded(
@@ -165,7 +168,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               controller: _pageController,
               onPageChanged: (idx) => setState(() => _currentSubPage = idx),
               physics: const NeverScrollableScrollPhysics(),
-              children: [_buildStepOne(), _buildStepTwo(), _buildStepThree()],
+              children: [_buildStepOne(), _buildStepTwo()],
             ),
           ),
         ],
@@ -186,7 +189,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           const SizedBox(height: 32),
           CustomTextField(
             controller: _fullNameController,
-
             labelText: AppString.fullName,
             errorText: "Please enter full name",
             hintText: 'John Doe',
@@ -194,14 +196,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           const SizedBox(height: 24),
           CustomTextField(
             controller: _phoneController,
-
             labelText: AppString.phoneNumber,
             errorText: "Please enter phone number",
             hintText: '+1 234 567 890',
             keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 24),
-
           CustomTextField(
             controller: _dateController,
             labelText: AppString.dateOfBirth,
@@ -212,15 +212,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             firstDate: DateTime(1950),
             lastDate: DateTime.now(),
           ),
-
           const Divider(height: 40),
           const Text(
             AppString.medicalHistory,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-
-          // Allergies
           const Padding(
             padding: EdgeInsets.only(bottom: 8),
             child: Text(
@@ -240,8 +237,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             },
           ),
           const SizedBox(height: 16),
-
-          // Medications
           const Padding(
             padding: EdgeInsets.only(bottom: 8),
             child: Text(
@@ -260,7 +255,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               });
             },
           ),
-
           const SizedBox(height: 32),
           CustomButton(
             text: AppString.createNewAccount,
@@ -286,14 +280,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           const SizedBox(height: 32),
           CustomTextField(
             controller: _emergencyContactController,
-
             labelText: AppString.emergencyContactNumber,
             errorText: "Please enter emergency contact",
             hintText: AppString.emergencyContactHint,
             prefixIcon: const Icon(Icons.phone_outlined, color: Colors.grey),
           ),
           const SizedBox(height: 24),
-
           CustomSwitch(
             label: AppString.allowSharingMedicalHistory,
             value: _shareDataWithInsurance,
@@ -310,10 +302,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         ],
       ),
     );
-  }
-
-  Widget _buildStepThree() {
-    return const Center(child: Text("Step 3 View (to be defined)"));
   }
 
   void _showSuccessDialog() {
@@ -347,7 +335,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               text: AppString.backToHome,
               backgroundColor: ColorsManager.purble,
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RoutManager.patientHome,
+                  (route) => false,
+                );
               },
             ),
           ],

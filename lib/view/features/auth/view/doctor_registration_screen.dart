@@ -73,7 +73,11 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
                 backgroundColor: ColorsManager.purble,
                 text: AppString.alreadyhaveanaccountLogIn,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutManager.login);
+                  Navigator.pushNamed(
+                    context,
+                    RoutManager.login,
+                    arguments: AppString.doctor,
+                  );
                 },
               ),
             ],
@@ -263,7 +267,10 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
               text: AppString.backToHome,
               backgroundColor: ColorsManager.purble,
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RoutManager.doctorHome,
+                  (route) => false,
+                );
               },
             ),
           ],

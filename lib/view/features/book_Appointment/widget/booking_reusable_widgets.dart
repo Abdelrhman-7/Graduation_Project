@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/model/doctor_model.dart';
 import 'package:graduation_project/shered_widgites/custom_rating_stars/doctor_rating_stars.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
 
 const Color primaryBlue = Color(0xFF3B82F6);
 const Color bgGrey = Color(0xFFF9FAFB);
@@ -39,7 +39,12 @@ class BookingDoctorCard extends StatelessWidget {
             ),
             child: Center(
               child: CustomText(
-                text: doctor.name.split(' ').map((e) => e[0]).take(2).join().toUpperCase(),
+                text: doctor.name
+                    .split(' ')
+                    .map((e) => e[0])
+                    .take(2)
+                    .join()
+                    .toUpperCase(),
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: primaryBlue,
@@ -195,7 +200,11 @@ class AppointmentTypeToggle extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: isActive ? primaryBlue : Colors.grey[600], size: 20),
+              Icon(
+                icon,
+                color: isActive ? primaryBlue : Colors.grey[600],
+                size: 20,
+              ),
               const SizedBox(width: 8),
               CustomText(
                 text: title,

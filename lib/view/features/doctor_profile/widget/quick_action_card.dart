@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
 
 class QuickActionCard extends StatelessWidget {
   final IconData icon;

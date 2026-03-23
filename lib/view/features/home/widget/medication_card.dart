@@ -5,6 +5,7 @@ class MedicationCard extends StatelessWidget {
   final String name;
   final String dose;
   final String timesPerDay;
+  final IconData? icon;
   final VoidCallback? onTap;
 
   const MedicationCard({
@@ -12,6 +13,7 @@ class MedicationCard extends StatelessWidget {
     required this.name,
     required this.dose,
     required this.timesPerDay,
+    this.icon,
     this.onTap,
   });
 
@@ -42,8 +44,8 @@ class MedicationCard extends StatelessWidget {
               color: ColorsManager.purble.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.medication,
+            child: Icon(
+              icon ?? Icons.medication,
               color: ColorsManager.purble,
               size: 28,
             ),

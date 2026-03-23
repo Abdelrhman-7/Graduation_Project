@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/routes_manager.dart';
 
 class UpNextAppointmentCard extends StatelessWidget {
   const UpNextAppointmentCard({super.key});
@@ -115,7 +116,9 @@ class UpNextAppointmentCard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RoutManager.chat);
+                  },
                   icon: const Icon(
                     Icons.videocam,
                     color: ColorsManager.primaryBlue,

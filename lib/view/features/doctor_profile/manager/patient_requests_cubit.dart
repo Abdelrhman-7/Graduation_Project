@@ -16,7 +16,6 @@ class PatientRequestsCubit extends Cubit<PatientRequestsState> {
   PatientRequestsCubit() : super(PatientRequestsInitial());
 
   void fetchRequests() {
-    // محاكاة جلب البيانات
     final mockData = [
       PatientRequestModel(
         title: 'Refill Request',
@@ -41,15 +40,51 @@ class PatientRequestsCubit extends Cubit<PatientRequestsState> {
       PatientRequestModel(
         title: 'Medical Certificate',
         description: 'Sick Leave 3 days',
-        icon: Icons.edit_document,
+        icon: Icons.assignment_outlined,
+      ),
+      PatientRequestModel(
+        title: 'Drug Reaction Report',
+        description: 'Minor skin rash',
+        icon: Icons.report_problem_outlined,
+      ),
+      PatientRequestModel(
+        title: 'Insurance Clearance',
+        description: 'Prior authorization',
+        icon: Icons.assignment_turned_in_outlined,
+      ),
+      PatientRequestModel(
+        title: 'Vitals Log Review',
+        description: 'High BP readings',
+        icon: Icons.monitor_heart_outlined,
       ),
       PatientRequestModel(
         title: 'Refill Request',
         description: 'Metformin - 500mg',
         icon: Icons.medication_outlined,
       ),
+      PatientRequestModel(
+        title: 'New Patient Intake',
+        description: 'Transfer from General',
+        icon: Icons.person_search_outlined,
+      ),
     ];
 
     emit(PatientRequestsLoaded(mockData));
+  }
+
+  void approveRequest(PatientRequestModel request) {
+    if (state is PatientRequestsLoaded) {
+      final updatedList = List<PatientRequestModel>.from((state as PatientRequestsLoaded).requests);
+      updatedList.remove(request);
+      emit(PatientRequestsLoaded(updatedList));
+    }
+  }
+
+  void denyRequest(PatientRequestModel request) {
+    if (state is PatientRequestsLoaded) {
+      final updatedList = List<PatientRequestModel>.from((state as PatientRequestsLoaded).requests);
+      updatedList.remove(request);
+      emit(PatientRequestsLoaded(updatedList));
+    }
   }
 }

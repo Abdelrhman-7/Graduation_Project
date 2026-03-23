@@ -9,8 +9,11 @@ import 'package:graduation_project/shered_widgites/routes_manager.dart';
 import 'package:graduation_project/view/features/auth/widget/auth_header_logo.dart';
 import 'package:graduation_project/view/features/auth/widget/customTextButton.dart';
 
+import 'package:graduation_project/shered_widgites/string/app_string.dart';
+
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? role;
+  const LoginScreen({super.key, this.role});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -48,7 +51,21 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
             prefController.saveLogin(emailController.text);
-            Navigator.pushNamed(context, RoutManager.home);
+            if (widget.role == AppString.doctor) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutManager.doctorHome,
+                (route) => false,
+              );
+            } else if (widget.role == AppString.patient) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutManager.patientHome,
+                (route) => false,
+              );
+            } else {
+              Navigator.pushNamed(context, RoutManager.home);
+            }
           } else if (state is TestApiError) {
             ScaffoldMessenger.of(
               context,
@@ -65,7 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const AuthHeaderLogo(title: "Welcome Dr / Patient"),
+                      AuthHeaderLogo(
+                        title: widget.role == null
+                            ? "Welcome Dr / Patient"
+                            : "Welcome ${widget.role}",
+                      ),
                       const SizedBox(height: 40),
                       CustomTextField(
                         controller: emailController,
@@ -104,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       customTextButton(
                         text: "Don't have an account?",
                         text2: "Register",
-                        //: RoutManager.registerscreen,
+                        rout: RoutManager.chooseAccount,
                       ),
                     ],
                   ),

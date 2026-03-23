@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../shered_widgites/custom_bouttm/custom_button.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../shered_widgites/custom_bouttm/custom_button.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
+import '../manager/patient_requests_cubit.dart';
 import '../model/patient_request_model.dart';
 
 class PatientRequestCard extends StatelessWidget {
@@ -36,10 +38,7 @@ class PatientRequestCard extends StatelessWidget {
                   color: ColorsManager.lightOrange,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  request.icon,
-                  color: ColorsManager.iconOrange,
-                ),
+                child: Icon(request.icon, color: ColorsManager.iconOrange),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -70,11 +69,20 @@ class PatientRequestCard extends StatelessWidget {
               Expanded(
                 child: CustomButton(
                   text: 'Deny',
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<PatientRequestsCubit>().denyRequest(request);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Request for ${request.title} denied'),
+                      ),
+                    );
+                  },
                   backgroundColor: ColorsManager.white,
                   textColor: ColorsManager.primaryBlue,
                   // ignore: deprecated_member_use
-                  side: BorderSide(color: ColorsManager.primaryBlue.withOpacity(0.5)),
+                  side: BorderSide(
+                    color: ColorsManager.primaryBlue.withOpacity(0.5),
+                  ),
                   height: 48,
                   fontSize: 15,
                 ),
@@ -83,7 +91,16 @@ class PatientRequestCard extends StatelessWidget {
               Expanded(
                 child: CustomButton(
                   text: 'Approve',
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<PatientRequestsCubit>().approveRequest(
+                      request,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Request for ${request.title} approved'),
+                      ),
+                    );
+                  },
                   backgroundColor: ColorsManager.primaryBlue,
                   textColor: ColorsManager.white,
                   height: 48,

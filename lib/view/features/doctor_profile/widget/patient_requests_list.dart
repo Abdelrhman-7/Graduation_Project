@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
 import '../manager/patient_requests_cubit.dart';
 import '../screen/patient_requests_screen.dart';
 import 'patient_request_card.dart';
@@ -47,7 +47,7 @@ class PatientRequestsList extends StatelessWidget {
                       color: ColorsManager.primaryBlue,
                     ),
                   );
-                }
+                },
               ),
             ],
           ),
@@ -69,11 +69,14 @@ class PatientRequestsList extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
                       itemCount: state.requests.length,
-                      separatorBuilder: (context, index) => const SizedBox(width: 16),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 16),
                       itemBuilder: (context, index) {
                         return SizedBox(
                           width: 300,
-                          child: PatientRequestCard(request: state.requests[index]),
+                          child: PatientRequestCard(
+                            request: state.requests[index],
+                          ),
                         );
                       },
                     );

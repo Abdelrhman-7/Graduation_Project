@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../shered_widgites/custom_text/custom_text.dart';
-import '../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/custom_text/custom_text.dart';
+import '../../../../../shered_widgites/resources/colors_manager.dart';
+import '../../../../../shered_widgites/routes_manager.dart';
 import 'quick_action_card.dart';
 
 class QuickActionsGrid extends StatelessWidget {
@@ -31,28 +32,42 @@ class QuickActionsGrid extends StatelessWidget {
               label: 'Write Note',
               iconColor: ColorsManager.primaryBlue,
               backgroundColor: ColorsManager.lightBlue,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(RoutManager.chat);
+              },
             ),
             QuickActionCard(
               icon: Icons.medical_services_outlined,
               label: 'e-Prescribe',
               iconColor: ColorsManager.iconPurple,
               backgroundColor: ColorsManager.lightPurple,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(
+                  context,
+                ).pushNamed(RoutManager.digitalPrescription);
+              },
             ),
             QuickActionCard(
               icon: Icons.science_outlined,
               label: 'Lab Results',
               iconColor: ColorsManager.iconGreen,
               backgroundColor: ColorsManager.lightGreen,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(RoutManager.labResults);
+              },
             ),
             QuickActionCard(
               icon: Icons.assignment_turned_in_outlined,
               label: 'Referrals',
               iconColor: ColorsManager.iconOrange,
               backgroundColor: ColorsManager.lightOrange,
-              onTap: () {},
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Referrals feature coming soon!'),
+                  ),
+                );
+              },
             ),
           ],
         ),
