@@ -16,6 +16,7 @@ class ProfileTopSection extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
+                  // ignore: deprecated_member_use
                   color: ColorsManager.primaryBlue.withOpacity(0.2),
                   width: 2,
                 ),
@@ -68,6 +69,7 @@ class ProfileTopSection extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: ColorsManager.primaryBlue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -95,6 +97,7 @@ class ProfileTopSection extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
+                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),

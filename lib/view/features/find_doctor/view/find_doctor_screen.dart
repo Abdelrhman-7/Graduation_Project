@@ -247,6 +247,7 @@ class _FindDoctorScreenState extends State<FindDoctorScreen> {
                       Icons.search_off_rounded,
                       // ignore: deprecated_member_use
                       size: 70,
+                      // ignore: deprecated_member_use
                       color: ColorsManager.lightGray.withOpacity(0.6),
                     ),
                     const SizedBox(height: 12),

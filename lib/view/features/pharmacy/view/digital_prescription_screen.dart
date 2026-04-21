@@ -4,7 +4,6 @@ import 'package:graduation_project/controller/business_logic-layer/pharmacy_cubi
 import 'package:graduation_project/controller/business_logic-layer/pharmacy_state.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
-import 'package:graduation_project/view/features/find_doctor/widget/doctor_details_widgets.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/instructions_list.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/medicine_info_card.dart';
 import 'package:graduation_project/view/features/pharmacy/widget/pharmacy_selection_card.dart';

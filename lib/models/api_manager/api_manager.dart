@@ -1,116 +1,217 @@
+// ignore_for_file: avoid_print
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:graduation_project/constant/api_constant.dart';
-import 'package:graduation_project/models/api_manager/custome_eception.dart';
-import 'package:graduation_project/models/model/response_api.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:dio/io.dart';
+import 'package:graduation_project/models/model/login_model.dart';
+import 'package:graduation_project/models/model/register_model.dart';
 
 class ApiManager {
-  final Dio dio =
-      Dio(
-          BaseOptions(
-            baseUrl: ApiConstant.baseUrl,
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          ),
-        )
-        ..interceptors.add(
-          PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseHeader: false,
-          ),
-        );
-  Future<ResponseApi> login(String email, String password) async {
-    try {
-      final response = await dio.post(
-        "/customers/login",
-        data: {"email": email, "password": password},
-      );
+  final Dio _dio;
+  static const String _baseUrl = 'http://medicalsystem111.runasp.net/api/';
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return ResponseApi.fromJson(response.data);
-      } else {
-        throw ApiException(
-          message: "Login Failed",
-          statusCode: response.statusCode,
-        );
-      }
-    } on DioException catch (e) {
-      throw _handleDioError(e);
+  ApiManager()
+    : _dio = Dio(
+        BaseOptions(
+          baseUrl: _baseUrl,
+          connectTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(seconds: 60),
+          sendTimeout: const Duration(seconds: 60),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Connection': 'keep-alive',
+          },
+          responseType: ResponseType.json,
+        ),
+      ) {
+    // Fix SSL + Force HTTP/1.1
+    final adapter = _dio.httpClientAdapter;
+    if (adapter is IOHttpClientAdapter) {
+      adapter.createHttpClient = () {
+        final client = HttpClient()
+          ..badCertificateCallback = (cert, host, port) => true;
+
+        // Force HTTP/1.1 — prevents "Connection reset by peer" on some servers
+        client.userAgent = 'Dart/3.0 (dart:io)';
+
+        return client;
+      };
     }
-  }
 
-  Future<String> register({
-    required String email,
-    required String password,
-    required String confirmPassword,
-    required String userName,
-    required String mobileNumber,
-    required String countryMobileCode,
-    required String profilePicture,
-  }) async {
-    try {
-      final response = await dio.post(
-        "/customers/register",
-        data: {
-          "user_name": userName,
-          "country_mobile_code": countryMobileCode,
-          "mobile_number": mobileNumber,
-          "email": email,
-          "password": password,
-          "profile_picture": profilePicture,
+    // Retry interceptor
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException error, ErrorInterceptorHandler handler) async {
+          if (_isRetryable(error) &&
+              error.requestOptions.extra['retried'] != true) {
+            try {
+              print('Retrying request after connection error...');
+              await Future.delayed(const Duration(seconds: 2));
+
+              final opts = error.requestOptions;
+              opts.extra['retried'] = true;
+
+              final response = await _dio.request(
+                opts.path,
+                data: opts.data,
+                queryParameters: opts.queryParameters,
+                options: Options(
+                  method: opts.method,
+                  headers: opts.headers,
+                  extra: opts.extra,
+                ),
+              );
+              handler.resolve(response);
+              return;
+            } catch (e) {
+              // Retry failed, continue with original error
+            }
+          }
+          handler.next(error);
         },
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data['message'];
-      } else {
-        throw ApiException(
-          message: "Register Failed",
-          statusCode: response.statusCode,
-        );
-      }
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
-  }
-
-  Future<String> forgetPassword({required String email}) async {
-    try {
-      final response = await dio.post(
-        "/customers/forgetPassword",
-        data: {"email": email},
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data['message'];
-      } else {
-        throw ApiException(
-          message: "Forget Password Failed",
-          statusCode: response.statusCode,
-        );
-      }
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
-  }
-
-  ApiException _handleDioError(DioException e) {
-    String errorMessage = "Unexpected Error";
-    if (e.response != null && e.response!.data is Map) {
-      errorMessage =
-          e.response!.data['message'] ??
-          e.response!.statusMessage ??
-          "Server Error ${e.response!.statusCode}";
-    } else {
-      errorMessage = e.message ?? "Network Error";
-    }
-    return ApiException(
-      message: errorMessage,
-      statusCode: e.response?.statusCode,
+      ),
     );
+
+    // Log interceptor
+    _dio.interceptors.add(
+      LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+        error: true,
+        requestHeader: true,
+      ),
+    );
+  }
+
+  bool _isRetryable(DioException error) {
+    return error.type == DioExceptionType.connectionError ||
+        error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        (error.message?.contains('Connection reset') ?? false) ||
+        (error.message?.contains('Connection closed') ?? false);
+  }
+
+  Future<LoginResponse> login(LoginRequest request) async {
+    try {
+      final body = request.toJson();
+      // ignore: duplicate_ignore
+      // ignore: avoid_print
+      print('Login request body: $body');
+
+      final response = await _dio.post('Identity/AccountApi/Login', data: body);
+
+      if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+        final data = response.data as Map<String, dynamic>;
+
+        // Server returns {token, expires} directly — wrap it in LoginResponse
+        if (data.containsKey('token')) {
+          return LoginResponse(
+            status: true,
+            message: 'Login Successful',
+            data: LoginData(
+              token: data['token'] as String?,
+              email: null,
+              fullName: null,
+            ),
+          );
+        }
+
+        // Handle new response format: {"message":"...","roles":["..."],"userId":"..."}
+        if (data.containsKey('userId') && data.containsKey('roles')) {
+          return LoginResponse(
+            status: true,
+            message: data['message']?.toString() ?? 'Login Successful',
+            data: LoginData(token: null, email: null, fullName: null),
+          );
+        }
+
+        // Fallback: server might return {status, message, data} format
+        return LoginResponse.fromJson(data);
+      } else {
+        return LoginResponse(
+          status: false,
+          message: 'Unexpected response format',
+        );
+      }
+    } on DioException catch (e) {
+      print('Login DioException: ${e.type} — ${e.message}');
+      if (e.response != null) {
+        final data = e.response!.data;
+        if (data is Map<String, dynamic>) {
+          return LoginResponse(
+            status: false,
+            message: data['message']?.toString() ?? _friendlyError(e),
+          );
+        } else if (data is String && data.isNotEmpty) {
+          return LoginResponse(status: false, message: data);
+        }
+      }
+      return LoginResponse(status: false, message: _friendlyError(e));
+    } catch (e) {
+      print('Login error: $e');
+      return LoginResponse(status: false, message: e.toString());
+    }
+  }
+
+  Future<RegisterResponse> register(RegisterRequest request) async {
+    try {
+      final body = request.toJson();
+      print('Register request body: $body');
+
+      final response = await _dio.post(
+        'Identity/AccountApi/Register',
+        data: body,
+      );
+
+      print('Register response: ${response.statusCode} — ${response.data}');
+      return RegisterResponse(status: true, message: response.data.toString());
+    } on DioException catch (e) {
+      print('Register DioException: ${e.type} — ${e.message}');
+      final data = e.response?.data;
+
+      if (data is List) {
+        final errorMessage = data
+            .map((error) => error['description'].toString())
+            .join('\n');
+        return RegisterResponse(status: false, message: errorMessage);
+      }
+
+      if (data is Map<String, dynamic>) {
+        return RegisterResponse(
+          status: false,
+          message: data['message']?.toString() ?? e.message ?? 'Error',
+        );
+      }
+
+      return RegisterResponse(status: false, message: _friendlyError(e));
+    } catch (e) {
+      print('Register error: $e');
+      return RegisterResponse(status: false, message: e.toString());
+    }
+  }
+
+  String _friendlyError(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+        return 'Server is taking too long to respond. Please try again.';
+      case DioExceptionType.connectionError:
+        return 'Could not connect to server. Please check your internet.';
+      default:
+        return e.message ?? 'Connection Error';
+    }
+  }
+
+  Future<RegisterResponse> forgetPassword(String email) async {
+    try {
+      final response = await _dio.post(
+        'Identity/AccountApi/ForgotPassword',
+        data: {'email': email},
+      );
+      return RegisterResponse.fromJson(response.data);
+    } catch (e) {
+      return RegisterResponse(status: false, message: e.toString());
+    }
   }
 }

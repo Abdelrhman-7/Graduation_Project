@@ -1,3 +1,5 @@
+// ignore_for_file: duplicate_ignore, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../../../../../shered_widgites/resources/colors_manager.dart';
 import '../../../../../shered_widgites/routes_manager.dart';
@@ -72,6 +74,7 @@ class UpNextAppointmentCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
                       color: ColorsManager.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),

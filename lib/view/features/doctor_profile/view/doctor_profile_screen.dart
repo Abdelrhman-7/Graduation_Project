@@ -6,7 +6,7 @@ import '../widget/up_next_appointment_card.dart';
 import '../widget/quick_actions_grid.dart';
 import '../widget/patient_requests_list.dart';
 import '../widget/today_schedule_list.dart';
-import '../../home/widget/notifications_drawer.dart';
+import '../../../patient/features/patient_home/widget/notifications_drawer.dart';
 import '../../../../../models/model/shered_pref_controller/shered_pref_controler.dart';
 import '../../../../../shered_widgites/routes_manager.dart';
 import '../../../../../shered_widgites/custom_bouttm/custom_button.dart';

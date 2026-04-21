@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/controller/business_logic-layer/test_api_cubit.dart';
+import 'package:graduation_project/controller/business_logic-layer/login_cubit.dart';
+import 'package:graduation_project/controller/business_logic-layer/register_cubit.dart';
+import 'package:graduation_project/controller/business_logic-layer/forget_password_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/models/model/login_model.dart';
+import 'package:graduation_project/models/model/register_model.dart';
 
 class CustomRegisterButton extends StatelessWidget {
   const CustomRegisterButton({
@@ -38,22 +42,32 @@ class CustomRegisterButton extends StatelessWidget {
               );
               return;
             }
-            context.read<TestApiCubit>().register(
-              email: emailController?.text ?? "",
+            context.read<RegisterCubit>().register(
+              RegisterRequest(
+                email: emailController?.text ?? "",
+                password: passwordController?.text ?? "",
+                fullName: userNameController?.text ?? "",
+              ),
+
+              /*   email: emailController?.text ?? "",
               password: passwordController?.text ?? "",
               confirmPassword: confirmPassword?.text ?? "",
               userName: userNameController?.text ?? "",
               mobileNumber: mobileNumberController?.text ?? "",
               countryMobileCode: countryMobileCode?.text ?? "",
-              profilePicture: profilePicture?.text ?? "",
+              profilePicture: profilePicture?.text ?? "",*/
             );
           } else if (text == "login") {
-            context.read<TestApiCubit>().login(
-              emailController?.text ?? "",
-              passwordController?.text ?? "",
+            context.read<LoginCubit>().login(
+              /* emailController?.text ?? "",
+              passwordController?.text ?? "",*/
+              LoginRequest(
+                email: emailController?.text ?? "",
+                password: passwordController?.text ?? "",
+              ),
             );
           } else if (text == "forget password") {
-            context.read<TestApiCubit>().forgetPassword(
+            context.read<ForgetPasswordCubit>().forgetPassword(
               email: emailController?.text ?? "",
             );
           }

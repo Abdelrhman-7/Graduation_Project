@@ -162,35 +162,4 @@ class _TodayScheduleScreenState extends State<TodayScheduleScreen> {
       ),
     );
   }
-
-  Widget _buildSummaryItem(String label, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CustomText(text: label, fontSize: 14, color: Colors.black54),
-          CustomText(
-            text: value,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: primaryBlue,
-          ),
-        ],
-      ),
-    );
-  }
 }

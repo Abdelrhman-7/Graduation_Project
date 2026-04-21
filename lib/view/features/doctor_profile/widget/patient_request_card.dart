@@ -81,6 +81,7 @@ class PatientRequestCard extends StatelessWidget {
                   textColor: ColorsManager.primaryBlue,
                   // ignore: deprecated_member_use
                   side: BorderSide(
+                    // ignore: deprecated_member_use
                     color: ColorsManager.primaryBlue.withOpacity(0.5),
                   ),
                   height: 48,

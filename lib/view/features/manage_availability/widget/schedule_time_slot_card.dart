@@ -56,7 +56,9 @@ class ScheduleTimeSlotCard extends StatelessWidget {
                   Icon(
                     Icons.access_time_rounded,
                     size: 14.w,
-                    color: isEnabled ? ColorsManager.primaryBlue : Colors.grey[400]!,
+                    color: isEnabled
+                        ? ColorsManager.primaryBlue
+                        : Colors.grey[400]!,
                   ),
                   SizedBox(width: 6.w),
                   CustomText(
@@ -72,6 +74,7 @@ class ScheduleTimeSlotCard extends StatelessWidget {
           CupertinoSwitch(
             value: isEnabled,
             onChanged: onChanged,
+            // ignore: deprecated_member_use
             activeColor: ColorsManager.primaryBlue,
           ),
         ],

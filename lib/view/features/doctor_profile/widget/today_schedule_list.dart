@@ -77,6 +77,7 @@ class TodayScheduleList extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.03),
               blurRadius: 10,
               offset: const Offset(0, 4),
@@ -107,6 +108,7 @@ class TodayScheduleList extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      // ignore: deprecated_member_use
                       color: iconColor.withOpacity(0.8),
                     ),
                   ),

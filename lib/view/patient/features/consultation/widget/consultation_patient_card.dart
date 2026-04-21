@@ -3,8 +3,37 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/shered_widgites/custom_text/custom_text.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 
-class ConsultationPatientCard extends StatelessWidget {
+import 'package:graduation_project/models/model/shered_pref_controller/shered_pref_controler.dart';
+import 'package:graduation_project/shered_widgites/resources/image_assets.dart';
+
+class ConsultationPatientCard extends StatefulWidget {
   const ConsultationPatientCard({super.key});
+
+  @override
+  State<ConsultationPatientCard> createState() => _ConsultationPatientCardState();
+}
+
+class _ConsultationPatientCardState extends State<ConsultationPatientCard> {
+  String userName = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final email = await SharedPrefController().getEmail();
+    if (email != null && email.contains('@')) {
+      setState(() {
+        userName = email.split('@').first;
+      });
+    } else {
+      setState(() {
+        userName = "Patient";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +55,7 @@ class ConsultationPatientCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 28.r,
-            backgroundImage: const NetworkImage(
-              'https://randomuser.me/api/portraits/women/44.jpg',
-            ),
+            backgroundImage: const AssetImage(ImageAssets.doctorImage),
             backgroundColor: ColorsManager.pastelBackground,
           ),
           SizedBox(width: 16.w),
@@ -36,8 +63,8 @@ class ConsultationPatientCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomText(
-                  text: "Sarah Jenkins, 34F",
+                CustomText(
+                  text: userName,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

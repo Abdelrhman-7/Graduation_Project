@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/controller/business_logic-layer/test_api_cubit.dart';
+import 'package:graduation_project/controller/business_logic-layer/login_cubit.dart';
+import 'package:graduation_project/models/model/login_model.dart';
 import 'package:graduation_project/models/model/shered_pref_controller/shered_pref_controler.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/custom_text_filed/custom_text_field.dart';
@@ -8,7 +9,6 @@ import 'package:graduation_project/shered_widgites/resources/colors_manager.dart
 import 'package:graduation_project/shered_widgites/routes_manager.dart';
 import 'package:graduation_project/view/features/auth/widget/auth_header_logo.dart';
 import 'package:graduation_project/view/features/auth/widget/customTextButton.dart';
-
 import 'package:graduation_project/shered_widgites/string/app_string.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,8 +28,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController(text: "naderawny@gmail.com");
-    passwordController = TextEditingController(text: "nader12345");
+    emailController = TextEditingController(
+      text: "wwwabdelrhmanmahmoud22@gmail.com",
+    );
+    passwordController = TextEditingController(text: "123456789@#\$Abdo");
   }
 
   @override
@@ -44,17 +46,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: ColorsManager.white,
       appBar: AppBar(title: const Text("Login Screen"), centerTitle: true),
-      body: BlocConsumer<TestApiCubit, TestApiState>(
+      body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
-          if (state is TestApiSuccess) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+          if (state is LoginSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.response.message ?? 'Login Successful'),
+              ),
+            );
             prefController.saveLogin(emailController.text);
             if (widget.role == AppString.doctor) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutManager.doctorHome,
+                RoutManager.home,
                 (route) => false,
               );
             } else if (widget.role == AppString.patient) {
@@ -64,9 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 (route) => false,
               );
             } else {
-              Navigator.pushNamed(context, RoutManager.home);
+              Navigator.pushNamed(context, RoutManager.patientHome);
             }
-          } else if (state is TestApiError) {
+          } else if (state is LoginError) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -110,17 +114,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      CustomButton(
-                        text: "Login",
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<TestApiCubit>().login(
-                              emailController.text,
-                              passwordController.text,
-                            );
-                          }
-                        },
-                      ),
+                      state is LoginLoading
+                          ? const CircularProgressIndicator()
+                          : CustomButton(
+                              text: "Login",
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<LoginCubit>().login(
+                                    LoginRequest(
+                                      email: emailController.text.trim(),
+                                      password: passwordController.text.trim(),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                       const SizedBox(height: 10),
                       customTextButton(
                         text: "Don't have an account?",

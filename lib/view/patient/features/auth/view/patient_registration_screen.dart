@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/controller/business_logic-layer/register_cubit.dart';
+import 'package:graduation_project/models/model/register_model.dart';
 import 'package:graduation_project/models/repository/patient_form_data.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_chip_selection.dart';
@@ -24,6 +27,8 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   final PageController _pageController = PageController();
   int _currentSubPage = 0;
 
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _dateController = TextEditingController();
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -36,6 +41,8 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     _dateController.dispose();
     _fullNameController.dispose();
     _phoneController.dispose();
@@ -67,7 +74,21 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
     if (_currentStep == PatientRegistrationStep.welcome) {
       return _buildWelcomeView();
     } else {
-      return _buildFormView();
+      return BlocListener<RegisterCubit, RegisterState>(
+        listener: (context, state) {
+          if (state is RegisterSuccess) {
+            _showSuccessDialog();
+          } else if (state is RegisterError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: _buildFormView(),
+      );
     }
   }
 
@@ -195,6 +216,21 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           ),
           const SizedBox(height: 24),
           CustomTextField(
+            controller: _emailController,
+            labelText: "Email",
+            errorText: "Please enter your email",
+            hintText: 'example@email.com',
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 24),
+          CustomTextField(
+            controller: _passwordController,
+            labelText: "Password",
+            errorText: "Please enter your password",
+            hintText: '••••••••',
+          ),
+          const SizedBox(height: 24),
+          CustomTextField(
             controller: _phoneController,
             labelText: AppString.phoneNumber,
             errorText: "Please enter phone number",
@@ -268,39 +304,65 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   }
 
   Widget _buildStepTwo() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            AppString.privacySettings,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return BlocBuilder<RegisterCubit, RegisterState>(
+      builder: (context, state) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                AppString.privacySettings,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 32),
+              CustomTextField(
+                controller: _emergencyContactController,
+                labelText: AppString.emergencyContactNumber,
+                errorText: "Please enter emergency contact",
+                hintText: AppString.emergencyContactHint,
+                prefixIcon: const Icon(
+                  Icons.phone_outlined,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 24),
+              CustomSwitch(
+                label: AppString.allowSharingMedicalHistory,
+                value: _shareDataWithInsurance,
+                onChanged: (val) =>
+                    setState(() => _shareDataWithInsurance = val),
+              ),
+              const SizedBox(height: 40),
+              state is RegisterLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : CustomButton(
+                      text: AppString.completeRegistration,
+                      backgroundColor: ColorsManager.purble,
+                      onPressed: () {
+                        if (_fullNameController.text.trim().isEmpty ||
+                            _emailController.text.trim().isEmpty ||
+                            _passwordController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill all required fields'),
+                            ),
+                          );
+                          return;
+                        }
+                        context.read<RegisterCubit>().register(
+                          RegisterRequest(
+                            fullName: _fullNameController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          ),
+                        );
+                      },
+                    ),
+            ],
           ),
-          const SizedBox(height: 32),
-          CustomTextField(
-            controller: _emergencyContactController,
-            labelText: AppString.emergencyContactNumber,
-            errorText: "Please enter emergency contact",
-            hintText: AppString.emergencyContactHint,
-            prefixIcon: const Icon(Icons.phone_outlined, color: Colors.grey),
-          ),
-          const SizedBox(height: 24),
-          CustomSwitch(
-            label: AppString.allowSharingMedicalHistory,
-            value: _shareDataWithInsurance,
-            onChanged: (val) => setState(() => _shareDataWithInsurance = val),
-          ),
-          const SizedBox(height: 40),
-          CustomButton(
-            text: AppString.completeRegistration,
-            backgroundColor: ColorsManager.purble,
-            onPressed: () {
-              _showSuccessDialog();
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -336,8 +398,9 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               backgroundColor: ColorsManager.purble,
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  RoutManager.patientHome,
+                  RoutManager.login,
                   (route) => false,
+                  arguments: AppString.patient,
                 );
               },
             ),

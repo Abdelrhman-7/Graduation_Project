@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/controller/business_logic-layer/test_api_cubit.dart';
+import 'package:graduation_project/controller/business_logic-layer/forget_password_cubit.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/custom_text_filed/custom_text_field.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
@@ -19,7 +19,9 @@ class _ForgetPassowrdState extends State<ForgetPassowrd> {
 
   void _sendResetLink() {
     if (_formKey.currentState!.validate()) {
-      context.read<TestApiCubit>().forgetPassword(email: emailController.text);
+      context.read<ForgetPasswordCubit>().forgetPassword(
+        email: emailController.text,
+      );
     }
   }
 
@@ -38,16 +40,16 @@ class _ForgetPassowrdState extends State<ForgetPassowrd> {
         elevation: 0,
         iconTheme: const IconThemeData(color: ColorsManager.black),
       ),
-      body: BlocConsumer<TestApiCubit, TestApiState>(
+      body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
         listener: (context, state) {
-          if (state is TestApiSuccess) {
+          if (state is ForgetPasswordSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: Colors.green,
               ),
             );
-          } else if (state is TestApiError) {
+          } else if (state is ForgetPasswordError) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -107,7 +109,7 @@ class _ForgetPassowrdState extends State<ForgetPassowrd> {
                           },
                         ),
                         const SizedBox(height: 30),
-                        state is TestApiLoading
+                        state is ForgetPasswordLoading
                             ? const CircularProgressIndicator(
                                 color: ColorsManager.purble,
                               )

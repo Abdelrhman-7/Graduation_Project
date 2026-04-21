@@ -1,107 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
+import 'package:graduation_project/view/features/chat/manager/chat_cubit.dart';
+import 'package:graduation_project/view/features/chat/manager/chat_state.dart';
 import 'package:graduation_project/view/features/chat/widget/chat_bubble.dart';
 import 'package:graduation_project/view/features/chat/widget/chat_day_divider.dart';
 import 'package:graduation_project/view/features/chat/widget/chat_input_bar.dart';
 import 'package:graduation_project/view/features/chat/view/call_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ChatScreen extends StatelessWidget {
+  ChatScreen({super.key});
 
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  // Sample conversation data
-  final List<Map<String, dynamic>> _messages = [
-    {
-      'message':
-          'Hello! I have reviewed your recent lab results. How are you feeling today?',
-      'time': '10:02 AM',
-      'isMe': false,
-      'day': 'Today',
-    },
-    {
-      'message':
-          'Hi Doctor, I\'ve been feeling a bit tired lately. Is something wrong?',
-      'time': '10:05 AM',
-      'isMe': true,
-      'day': null,
-    },
-    {
-      'message':
-          'Your hemoglobin trend is slightly elevated at 14.2 g/dL, but that\'s within normal range. The fatigue might be due to your cholesterol level.',
-      'time': '10:07 AM',
-      'isMe': false,
-      'day': null,
-    },
-    {
-      'message': 'Should I be worried about the cholesterol?',
-      'time': '10:09 AM',
-      'isMe': true,
-      'day': null,
-    },
-    {
-      'message':
-          'At 210 mg/dL it\'s slightly above the recommended limit of 200 mg/dL. I\'d suggest dietary changes and a follow-up in 4 weeks.',
-      'time': '10:12 AM',
-      'isMe': false,
-      'day': null,
-    },
-    {
-      'message': 'Thank you Doctor! I\'ll follow your advice.',
-      'time': '10:14 AM',
-      'isMe': true,
-      'day': null,
-    },
-  ];
-
-  void _sendMessage() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-    setState(() {
-      _messages.add({
-        'message': text,
-        'time': 'Now',
-        'isMe': true,
-        'day': null,
-      });
-      _controller.clear();
-    });
-
-    // Simulated reply
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _messages.add({
-            'message':
-                'Thank you for your message. I will review this and get back to you shortly.',
-            'time': 'Now',
-            'isMe': false,
-            'day': null,
-          });
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _showAttachmentOptions() {
+  void _showAttachmentOptions(BuildContext context, ChatCubit cubit) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
+      builder: (bottomSheetContext) {
         return SafeArea(
           child: Wrap(
             children: [
@@ -112,8 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 title: const Text('Photo Gallery'),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickMedia(ImageSource.gallery, isVideo: false);
+                  Navigator.pop(bottomSheetContext);
+                  _pickMedia(ImageSource.gallery, isVideo: false, cubit: cubit);
                 },
               ),
               ListTile(
@@ -123,8 +42,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 title: const Text('Video Gallery'),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickMedia(ImageSource.gallery, isVideo: true);
+                  Navigator.pop(bottomSheetContext);
+                  _pickMedia(ImageSource.gallery, isVideo: true, cubit: cubit);
                 },
               ),
               ListTile(
@@ -134,8 +53,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 title: const Text('Camera'),
                 onTap: () {
-                  Navigator.pop(context);
-                  _pickMedia(ImageSource.camera, isVideo: false);
+                  Navigator.pop(bottomSheetContext);
+                  _pickMedia(ImageSource.camera, isVideo: false, cubit: cubit);
                 },
               ),
             ],
@@ -145,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Future<void> _pickMedia(ImageSource source, {required bool isVideo}) async {
+  Future<void> _pickMedia(ImageSource source, {required bool isVideo, required ChatCubit cubit}) async {
     final ImagePicker picker = ImagePicker();
     XFile? file;
     try {
@@ -155,15 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
         file = await picker.pickImage(source: source);
       }
       if (file != null) {
-        setState(() {
-          _messages.add({
-            'message': null,
-            'imagePath': file!.path,
-            'time': 'Now',
-            'isMe': true,
-            'day': null,
-          });
-        });
+         cubit.sendMessage(receiverId: 'doctor_1', imagePath: file.path);
       }
     } catch (e) {
       debugPrint('Error picking media: $e');
@@ -172,43 +83,63 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
-      appBar: _buildAppBar(context),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              itemCount: _messages.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final msg = _messages[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Day divider
-                    if (msg['day'] != null) ...[
-                      ChatDayDivider(label: msg['day'] as String),
-                      const SizedBox(height: 12),
-                    ],
-                    ChatBubble(
-                      message: msg['message'] as String?,
-                      time: msg['time'] as String,
-                      isMe: msg['isMe'] as bool,
-                      imagePath: msg['imagePath'] as String?,
-                    ),
-                  ],
-                );
-              },
+    return BlocProvider(
+      create: (context) => ChatCubit()..getMessages(receiverId: 'doctor_1'),
+      child: BlocConsumer<ChatCubit, ChatState>(
+        listener: (context, state) {
+          if (state is SendMessageSuccessState) {
+            _controller.clear();
+          }
+        },
+        builder: (context, state) {
+          var cubit = ChatCubit.get(context);
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F7FF),
+            appBar: _buildAppBar(context),
+            body: Column(
+              children: [
+                Expanded(
+                  child: state is GetMessagesLoadingState && cubit.messages.isEmpty
+                      ? const Center(child: CircularProgressIndicator(color: ColorsManager.purble))
+                      : ListView.separated(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          itemCount: cubit.messages.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final msg = cubit.messages[index];
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // Day divider
+                                if (msg.day != null) ...[
+                                  ChatDayDivider(label: msg.day!),
+                                  const SizedBox(height: 12),
+                                ],
+                                ChatBubble(
+                                  message: msg.message,
+                                  time: msg.time ?? 'Now',
+                                  isMe: msg.isMe,
+                                  imagePath: msg.imagePath,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                ),
+                ChatInputBar(
+                  controller: _controller,
+                  onSend: () {
+                     cubit.sendMessage(
+                       receiverId: 'doctor_1',
+                       text: _controller.text,
+                     );
+                  },
+                  onAttachTap: () => _showAttachmentOptions(context, cubit),
+                ),
+              ],
             ),
-          ),
-          ChatInputBar(
-            controller: _controller,
-            onSend: _sendMessage,
-            onAttachTap: _showAttachmentOptions,
-          ),
-        ],
+          );
+        },
       ),
     );
   }

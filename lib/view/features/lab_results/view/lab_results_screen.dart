@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/shered_widgites/custom_bouttm/custom_button.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 import 'package:graduation_project/shered_widgites/routes_manager.dart';
-import 'package:graduation_project/view/features/home/widget/home_section_header.dart';
+import 'package:graduation_project/view/patient/features/patient_home/widget/home_section_header.dart';
 import 'package:graduation_project/view/features/lab_results/widget/detailed_results_card.dart';
 import 'package:graduation_project/view/features/lab_results/widget/hemoglobin_trend_card.dart';
 import 'package:graduation_project/view/features/lab_results/widget/lab_report_card.dart';

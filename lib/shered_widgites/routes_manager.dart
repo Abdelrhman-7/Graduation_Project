@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:graduation_project/view/features/auth/view/choose_account.dart';
 import 'package:graduation_project/view/features/auth/view/doctor_registration_screen.dart';
 import 'package:graduation_project/view/features/auth/view/forget_passowrd.dart';
@@ -7,13 +6,13 @@ import 'package:graduation_project/view/features/auth/view/login_screen.dart';
 import 'package:graduation_project/view/features/chat/view/chat_screen.dart';
 import 'package:graduation_project/view/features/doctor_dashboard/view/doctor_main_screen.dart';
 import 'package:graduation_project/view/features/find_doctor/view/find_doctor_screen.dart';
-import 'package:graduation_project/view/features/home/view/home_screen.dart';
+import 'package:graduation_project/view/patient/features/patient_home/view/home_screen.dart';
 import 'package:graduation_project/view/features/lab_results/view/lab_results_screen.dart';
 import 'package:graduation_project/view/features/pharmacy/view/digital_prescription_screen.dart';
 import 'package:graduation_project/view/features/pharmacy/view/medication_refill_screen.dart';
-import 'package:graduation_project/view/patient/features/home/view/patient_main_screen.dart';
 import 'package:graduation_project/view/patient/features/consultation/view/consultation_overview_screen.dart';
 import 'package:graduation_project/view/features/manage_availability/view/manage_availability_screen.dart';
+
 class RoutManager {
   static const String login = '/loginscreen';
   static const String registerscreen = '/registerscreen';
@@ -50,11 +49,11 @@ class RoutManager {
 
       case chooseAccount:
         return MaterialPageRoute(builder: (_) => const ChooseAccount());
-
+      /*
       case patientRegistrationScreen:
         return MaterialPageRoute(
           builder: (_) => const ConsultationOverviewScreen(),
-        );
+        );*/
       case doctorRegistrationScreen:
         return MaterialPageRoute(
           builder: (_) => const DoctorRegistrationScreen(),
@@ -72,7 +71,7 @@ class RoutManager {
         return MaterialPageRoute(builder: (_) => const LabResultsScreen());
 
       case chat:
-        return MaterialPageRoute(builder: (_) => const ChatScreen());
+        return MaterialPageRoute(builder: (_) => ChatScreen());
 
       case medicationRefill:
         final med = settings.arguments as Map<String, String>;
@@ -87,11 +86,6 @@ class RoutManager {
 
       case doctorHome:
         return MaterialPageRoute(builder: (_) => const DoctorMainScreen());
-
-      case consultationOverview:
-        return MaterialPageRoute(
-          builder: (_) => const ConsultationOverviewScreen(),
-        );
 
       case manageAvailability:
         return MaterialPageRoute(
