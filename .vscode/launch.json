@@ -1,0 +1,63 @@
+{
+    // Dart / Flutter: install the "Dart" extension.
+    // If Edge/Chrome fails to launch from Flutter, use "Flutter (web-server)" then open the printed URL in your browser.
+    // Chrome / Edge entries below debug arbitrary pages on localhost:8080 (not Flutter web-server).
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter (debug)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Flutter (web-server)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["-d", "web-server", "--web-hostname", "localhost", "--web-port", "8080"]
+        },
+        {
+            "name": "Flutter (Edge)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["-d", "edge"]
+        },
+        {
+            "name": "Flutter (Chrome)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["-d", "chrome"]
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Launch Edge",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Attach to Edge",
+            "port": 9222,
+            "request": "attach",
+            "type": "msedge",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

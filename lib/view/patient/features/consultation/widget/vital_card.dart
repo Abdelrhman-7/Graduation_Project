@@ -5,25 +5,26 @@ import 'package:graduation_project/shered_widgites/resources/colors_manager.dart
 
 class VitalCard extends StatelessWidget {
   final IconData icon;
-  final String value;
   final String label;
-  final String? status;
-  final Color? statusColor;
+  final String value;
+  /// Unit or status line under the value (e.g. "Normal", "bpm", "Fahrenheit").
+  final String? footer;
+  final Color? footerColor;
 
   const VitalCard({
     super.key,
     required this.icon,
-    required this.value,
     required this.label,
-    this.status,
-    this.statusColor,
+    required this.value,
+    this.footer,
+    this.footerColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 105.w,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 8.w),
       decoration: BoxDecoration(
         color: ColorsManager.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -39,27 +40,27 @@ class VitalCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(icon, size: 20.w, color: ColorsManager.lightGray),
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
+          CustomText(
+            text: label,
+            fontSize: 11,
+            color: ColorsManager.lightGray,
+            fontWeight: FontWeight.w600,
+          ),
+          SizedBox(height: 6.h),
           CustomText(
             text: value,
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: ColorsManager.black,
           ),
-          SizedBox(height: 4.h),
-          CustomText(
-            text: label,
-            fontSize: 12,
-            color: ColorsManager.lightGray,
-            fontWeight: FontWeight.w500,
-          ),
-          if (status != null) ...[
+          if (footer != null) ...[
             SizedBox(height: 4.h),
             CustomText(
-              text: status!,
+              text: footer!,
               fontSize: 11,
-              color: statusColor ?? Colors.green,
-              fontWeight: FontWeight.bold,
+              color: footerColor ?? ColorsManager.lightGray,
+              fontWeight: FontWeight.w600,
             ),
           ],
         ],

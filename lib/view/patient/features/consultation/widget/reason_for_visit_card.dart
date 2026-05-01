@@ -76,7 +76,7 @@ class ReasonForVisitCard extends StatelessWidget {
                     SizedBox(height: 8.h),
                     CustomText(
                       text:
-                          "Experiencing persistent migraine on the left side for 5 days. Patient reports extreme sensitivity to light and nausea.",
+                          "Experiencing persistent migraine on the left side for 3 days. Patient reports extreme sensitivity to light and nausea.",
                       fontSize: 13,
                       // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.9),

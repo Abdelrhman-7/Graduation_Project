@@ -28,7 +28,12 @@ class ConsultationOverviewScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          SizedBox(width: 8.w),
+          IconButton(
+            icon: const Icon(Icons.visibility_outlined, color: Colors.black87),
+            tooltip: 'Reveal encrypted medical history',
+            onPressed: () {},
+          ),
+          SizedBox(width: 4.w),
         ],
       ),
       body: SingleChildScrollView(
@@ -48,19 +53,22 @@ class ConsultationOverviewScreen extends StatelessWidget {
               children: const [
                 VitalCard(
                   icon: Icons.favorite_outline,
-                  value: "120/80",
                   label: "BP",
-                  status: "Normal",
+                  value: "120/80",
+                  footer: "Normal",
+                  footerColor: Colors.green,
                 ),
                 VitalCard(
                   icon: Icons.timer_outlined,
-                  value: "78",
                   label: "HR",
+                  value: "78",
+                  footer: "bpm",
                 ),
                 VitalCard(
                   icon: Icons.thermostat_outlined,
-                  value: "98.6°",
                   label: "Temp",
+                  value: "98.6°",
+                  footer: "Fahrenheit",
                 ),
               ],
             ),

@@ -3,37 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/shered_widgites/custom_text/custom_text.dart';
 import 'package:graduation_project/shered_widgites/resources/colors_manager.dart';
 
-import 'package:graduation_project/models/model/shered_pref_controller/shered_pref_controler.dart';
 import 'package:graduation_project/shered_widgites/resources/image_assets.dart';
 
-class ConsultationPatientCard extends StatefulWidget {
-  const ConsultationPatientCard({super.key});
+class ConsultationPatientCard extends StatelessWidget {
+  final String patientLine;
+  final String statusLabel;
+  final String timeLabel;
 
-  @override
-  State<ConsultationPatientCard> createState() => _ConsultationPatientCardState();
-}
-
-class _ConsultationPatientCardState extends State<ConsultationPatientCard> {
-  String userName = "Loading...";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserName();
-  }
-
-  Future<void> _loadUserName() async {
-    final email = await SharedPrefController().getEmail();
-    if (email != null && email.contains('@')) {
-      setState(() {
-        userName = email.split('@').first;
-      });
-    } else {
-      setState(() {
-        userName = "Patient";
-      });
-    }
-  }
+  const ConsultationPatientCard({
+    super.key,
+    this.patientLine = 'Sarah Jenkins, 34F',
+    this.statusLabel = 'Ready for Call',
+    this.timeLabel = '10:00 AM',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +46,7 @@ class _ConsultationPatientCardState extends State<ConsultationPatientCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: userName,
+                  text: patientLine,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -80,15 +62,15 @@ class _ConsultationPatientCardState extends State<ConsultationPatientCard> {
                       ),
                     ),
                     SizedBox(width: 6.w),
-                    const CustomText(
-                      text: "Ready for Call",
+                    CustomText(
+                      text: statusLabel,
                       fontSize: 13,
                       color: Colors.green,
                       fontWeight: FontWeight.w500,
                     ),
                     SizedBox(width: 12.w),
                     CustomText(
-                      text: "10:00 AM",
+                      text: timeLabel,
                       fontSize: 13,
                       color: ColorsManager.lightGray,
                     ),

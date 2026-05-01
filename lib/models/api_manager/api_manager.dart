@@ -159,7 +159,7 @@ class ApiManager {
       print('Register request body: $body');
 
       final response = await _dio.post(
-        'Identity/AccountApi/Register',
+        'Identity/AccountApi/RegisterPatient',
         data: body,
       );
 
